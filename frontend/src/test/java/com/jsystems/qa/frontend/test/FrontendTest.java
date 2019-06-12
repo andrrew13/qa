@@ -7,7 +7,9 @@ import com.jsystems.qa.frontend.page.UserPage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import static java.lang.Thread.sleep;
 import static junit.framework.TestCase.assertTrue;
@@ -53,28 +55,53 @@ public class FrontendTest extends ConfigFrontend{
     }
 
     @Test
+    public void loginTest() {
+        login();
 
-    public void loginTest(){
+        userPage = new UserPage(driver);
+        userPage.waitForVisibilityOfElement(userPage.userAvatar, 30);
+        assertTrue(userPage.userAvatar.isDisplayed());
 
-    wordpressPage = new MainWordpressPage(driver);
-    wordpressPage.waitForVisibilityOfElement(wordpressPage.login, 30);
-    wordpressPage.login.click();
+//        Alert alert = driver.switchTo().alert();
+//        alert.accept();
+//        driver.switchTo().alert();
 
-    loginPage = new LoginPage(driver);
-    loginPage.waitForVisibilityOfElement(loginPage.emailInput,30);
-    loginPage.emailInput.clear();
-    loginPage.emailInput.sendKeys(Configuration.LOGIN);
-    loginPage.buttonContinue.click();
+    }
 
-    loginPage.waitForVisibilityOfElement(loginPage.passwordInput, 30);
-    loginPage.passwordInput.clear();
-    loginPage.passwordInput.sendKeys(Configuration.PASSWORD);
-    loginPage.buttonContinue.click();
+    @Test
+    public void loginActionTest() {
 
-    userPage = new UserPage(driver);
-    userPage.waitForVisibilityOfElement(userPage.userAvatar, 30);
-    assertTrue(userPage.userAvatar.isDisplayed());
+        wordpressPage = new MainWordpressPage(driver);
+        wordpressPage.waitForVisibilityOfElement(wordpressPage.login, 30);
+        wordpressPage.login.click();
+        loginPage = new LoginPage(driver);
+        loginPage.waitForVisibilityOfElement(loginPage.emailInput, 30);
 
+        Actions action = new Actions(driver);
+        action
+                .moveToElement(loginPage.emailInput)
+                .sendKeys(Configuration.LOGIN)
+                .sendKeys(Keys.chord(Keys.ENTER))
+                .build()
+                .perform();
+
+        loginPage.waitForVisibilityOfElement(loginPage.passwordInput, 30);
+        assertTrue(loginPage.buttonContinue.getText().equals("Log In"));
+    }
+
+    private void login() {
+        wordpressPage = new MainWordpressPage(driver);
+        wordpressPage.waitForVisibilityOfElement(wordpressPage.login, 30);
+        wordpressPage.login.click();
+        loginPage = new LoginPage(driver);
+        loginPage.waitForVisibilityOfElement(loginPage.emailInput, 30);
+        loginPage.emailInput.clear();
+        loginPage.emailInput.sendKeys(Configuration.LOGIN);
+        loginPage.buttonContinue.click();
+        loginPage.waitForVisibilityOfElement(loginPage.passwordInput, 30);
+        loginPage.passwordInput.clear();
+        loginPage.passwordInput.sendKeys(Configuration.PASSWORD);
+        loginPage.buttonContinue.click();
     }
 
 }

@@ -10,18 +10,14 @@ public class BasePage {
 
     public WebDriver driver;
 
-    public BasePage(WebDriver driver){
 
+    public BasePage(WebDriver driver) {
         this.driver = driver;
-
     }
 
-    public void waitForVisibilityOfElement(WebElement element, int maxWaitTime){
-
+    public void waitForVisibilityOfElement(WebElement element, int maxWaitTime) {
         WebDriverWait wait = new WebDriverWait(driver, maxWaitTime);
         wait.until(ExpectedConditions.visibilityOf(element));
-
     }
-
 
 }
