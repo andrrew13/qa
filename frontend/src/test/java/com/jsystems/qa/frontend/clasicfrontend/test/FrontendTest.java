@@ -1,14 +1,11 @@
-package com.jsystems.qa.frontend.test;
+package com.jsystems.qa.frontend.clasicfrontend.test;
 
 import com.jsystems.qa.frontend.Configuration;
-import com.jsystems.qa.frontend.page.LoginPage;
-import com.jsystems.qa.frontend.page.MainWordpressPage;
-import com.jsystems.qa.frontend.page.UserPage;
-import org.junit.jupiter.api.BeforeAll;
+import com.jsystems.qa.frontend.clasicfrontend.page.LoginPage;
+import com.jsystems.qa.frontend.clasicfrontend.page.MainWordpressPage;
+import com.jsystems.qa.frontend.clasicfrontend.page.UserPage;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import static java.lang.Thread.sleep;
