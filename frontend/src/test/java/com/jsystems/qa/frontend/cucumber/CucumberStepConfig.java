@@ -10,46 +10,52 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 public class CucumberStepConfig {
 
     WebDriver driver;
+    String chromePath;
+    String fireFoxPath;
 
-
-    public WebDriver setUp(){
-
-        String browser = Configuration.getBROWSER();
-
-        if(browser.equals("chrome")){
-
-            driver= new ChromeDriver();
-        }else if(browser.equals("firefox")){
-            driver= new FirefoxDriver();
+    {
+        try {
+            chromePath = Paths.get(getClass().getClassLoader().getResource("driver/chromedriver.exe").toURI()).toFile().getAbsolutePath();
+            fireFoxPath = Paths.get(getClass().getClassLoader().getResource("driver/geckodriver.exe").toURI()).toFile().getAbsolutePath();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
-
-        setDriver();
-
-
-        return driver;
     }
 
     @Before
-    public static void setUpAll(){
+    public static void setUpAll() {
+//        WebDriverManager.chromedriver().setup();
+    }
 
-        System.setProperty("webdriver.chrome.driver", ClassLoader.getSystemClassLoader().getResource("driver/chromedriver.exe").getFile());
+
+
+    public WebDriver setUp() {
+        System.setProperty("webdriver.chrome.driver", chromePath);
+        System.setProperty("webdriver.gecko.driver", fireFoxPath);
+        String browser = Configuration.getBROWSER();
+
+        if(browser.equals("chrome")){
+            driver = new ChromeDriver();
+        } else if(browser.equals("firefox")){
+            driver = new FirefoxDriver();
+        }
+
+        setDriver();
+        return driver;
     }
 
     private void setDriver() {
-
         driver.manage().window().maximize();
         driver.manage().deleteAllCookies();
         driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
-
-
-
     }
-
 
     @After
     public void tearDown(Scenario scenario) {

@@ -8,43 +8,56 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 public class ConfigFrontend {
 
     WebDriver driver;
 
-    @BeforeAll
-    public static void setUpAll(){
 
-        System.setProperty("webdriver.chrome.driver", ClassLoader.getSystemClassLoader().getResource("driver/chromedriver.exe").getFile());
+    String chromePath;
+    String fireFoxPath;
+
+    {
+        try {
+            chromePath = Paths.get(getClass().getClassLoader().getResource("driver/chromedriver.exe").toURI()).toFile().getAbsolutePath();
+            fireFoxPath = Paths.get(getClass().getClassLoader().getResource("driver/geckodriver.exe").toURI()).toFile().getAbsolutePath();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
+
+    @BeforeAll
+    public static void setUpAll() {
+//        WebDriverManager.chromedriver().setup();
+    }
+
     @BeforeEach
-    public void setUpEach(){
+    public void setUpEach() {
+        System.setProperty("webdriver.chrome.driver", chromePath);
+        System.setProperty("webdriver.gecko.driver", fireFoxPath);
 
         String browser = Configuration.getBROWSER();
 
         if(browser.equals("chrome")){
-
-            driver= new ChromeDriver();
-        }else if(browser.equals("firefox")){
-            driver= new FirefoxDriver();
+            driver = new ChromeDriver();
+        } else if(browser.equals("firefox")){
+            driver = new FirefoxDriver();
         }
 
-//        WebDriver driver = new ChromeDriver();
         setDriver();
 
         driver.get(Configuration.BASE_URL);
     }
 
     @AfterEach
-    public void tearDown(){
+    public void tearDown() {
         driver.quit();
-
     }
 
     private void setDriver() {
-
         driver.manage().window().maximize();
         driver.manage().deleteAllCookies();
         driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
